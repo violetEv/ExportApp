@@ -5,63 +5,66 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using ClosedXML.Excel;
+using ExportApp.Data;
+using ExportApp.Models;
 
-
-public class DataModel
-{
-    public string Nama { get; set; } = string.Empty;
-    public DateTime Tanggal { get; set; }
-}
 
 public class ExportController : Controller
 {
-    // Dummy data
-    private List<DataModel> AmbilData()
-    {
-        return new List<DataModel>
+        private readonly IDataRepository _repository;
+
+        public ExportController(IDataRepository repository)
         {
-            new DataModel { Nama = "Marry", Tanggal = DateTime.Now },
-            new DataModel { Nama = "Jane", Tanggal = DateTime.Now }
-        };
-    }
+            _repository = repository;
+        }
 
-    public IActionResult Index()
-    {
-        var data = AmbilData();
-        return View(data);
-    }
+        public async Task<IActionResult> Index()
+        {
+            var data = await _repository.GetDataAsync();
+            return View(data);
+        }
 
-    public IActionResult ExportPdf()
+    public async Task<IActionResult> ExportPdf()
     {
-        var data = AmbilData();
+        var data = await _repository.GetDataAsync();
         return new ViewAsPdf("ExportPdf", data)
         {
             FileName = "ExportPdf.pdf"
         };
     }
 
-public IActionResult ExportExcel()
+public async Task<IActionResult> ExportExcel()
     {
+        var data = await _repository.GetDataAsync();
+
         using (var workbook = new XLWorkbook())
         {
             var worksheet = workbook.Worksheets.Add("Data");
+
+            // Header
             worksheet.Cell(1, 1).Value = "Nama";
             worksheet.Cell(1, 2).Value = "Tanggal";
 
-            worksheet.Cell(2, 1).Value = "Marry";
-            worksheet.Cell(2, 2).Value = DateTime.Now.ToString("dd/MM/yyyy");
- 
-            worksheet.Cell(3, 1).Value = "Jane";
-            worksheet.Cell(3, 2).Value = DateTime.Now.ToString("dd/MM/yyyy");
+            // Data rows
+            int row = 2;
+            foreach (var item in data)
+            {
+                worksheet.Cell(row, 1).Value = item.Nama;
+                worksheet.Cell(row, 2).Value = item.Tanggal.ToString("dd/MM/yyyy");
+                row++;
+            }
+
             using (var stream = new MemoryStream())
             {
                 workbook.SaveAs(stream);
                 stream.Position = 0;
 
-                return File(stream.ToArray(),
+                return File(
+                    stream.ToArray(),
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    "ExportExcel.xlsx");
+                    "ExportExcel.xlsx"
+                );
             }
         }
-}
+    }
 }
