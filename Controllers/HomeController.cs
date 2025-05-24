@@ -13,17 +13,25 @@ public class HomeController : Controller
         _logger = logger;
     }
 
-    public IActionResult Index()
+    private List<DataModel> AmbilData()
     {
-        return View();
+        return new List<DataModel>
+        {
+            new DataModel { Nama = "Marry", Tanggal = DateTime.Now },
+            new DataModel { Nama = "Jane", Tanggal = DateTime.Now }
+        };
     }
 
+    public IActionResult Index()
+    {
+        var data = AmbilData();
+        return View(data);
+    }
     public IActionResult Privacy()
     {
         return View();
     }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

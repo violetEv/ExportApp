@@ -1,4 +1,4 @@
-@model dynamic
+@model List<DataModel>
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,8 +6,14 @@
     <title>Export PDF</title>
 </head>
 <body>
-    <h2>Data Export PDF</h2>
-    <p>Nama: @Model.Name</p>
-    <p>Tanggal: @Model.Date</p>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@item.Nama</td
+        <td>@item.Tanggal.ToString("dd/MM/yyyy")</td>
+    </tr>
+}
+
 </body>
 </html>

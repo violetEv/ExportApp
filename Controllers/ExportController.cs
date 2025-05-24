@@ -1,35 +1,67 @@
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
 using Rotativa.AspNetCore;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using ClosedXML.Excel;
+
+
+public class DataModel
+{
+    public string Nama { get; set; } = string.Empty;
+    public DateTime Tanggal { get; set; }
+}
 
 public class ExportController : Controller
 {
-    public IActionResult Index() => View();
-
-    public IActionResult ExportPdf()
+    // Dummy data
+    private List<DataModel> AmbilData()
     {
-        var model = new { Name = "Contoh Data", Date = DateTime.Now };
-        return new ViewAsPdf("ExportPdf", model)
+        return new List<DataModel>
         {
-            FileName = "ExportedFile.pdf"
+            new DataModel { Nama = "Marry", Tanggal = DateTime.Now },
+            new DataModel { Nama = "Jane", Tanggal = DateTime.Now }
         };
     }
 
-    public IActionResult ExportExcel()
+    public IActionResult Index()
     {
-        var stream = new MemoryStream();
-        using (var package = new ExcelPackage(stream))
-        {
-            var sheet = package.Workbook.Worksheets.Add("Data");
-            sheet.Cells[1, 1].Value = "Nama";
-            sheet.Cells[1, 2].Value = "Tanggal";
-            sheet.Cells[2, 1].Value = "Contoh Data";
-            sheet.Cells[2, 2].Value = DateTime.Now.ToString("dd/MM/yyyy");
-            package.Save();
-        }
-        stream.Position = 0;
-        string excelName = $"Export_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
-        return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+        var data = AmbilData();
+        return View(data);
     }
+
+    public IActionResult ExportPdf()
+    {
+        var data = AmbilData();
+        return new ViewAsPdf("ExportPdf", data)
+        {
+            FileName = "ExportPdf.pdf"
+        };
+    }
+
+public IActionResult ExportExcel()
+    {
+        using (var workbook = new XLWorkbook())
+        {
+            var worksheet = workbook.Worksheets.Add("Data");
+            worksheet.Cell(1, 1).Value = "Nama";
+            worksheet.Cell(1, 2).Value = "Tanggal";
+
+            worksheet.Cell(2, 1).Value = "Marry";
+            worksheet.Cell(2, 2).Value = DateTime.Now.ToString("dd/MM/yyyy");
+ 
+            worksheet.Cell(3, 1).Value = "Jane";
+            worksheet.Cell(3, 2).Value = DateTime.Now.ToString("dd/MM/yyyy");
+            using (var stream = new MemoryStream())
+            {
+                workbook.SaveAs(stream);
+                stream.Position = 0;
+
+                return File(stream.ToArray(),
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "ExportExcel.xlsx");
+            }
+        }
+}
 }

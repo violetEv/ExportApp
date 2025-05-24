@@ -40,3 +40,12 @@ D:\ExportApp\obj\Debug\net8.0\refint\ExportApp.dll
 D:\ExportApp\obj\Debug\net8.0\ExportApp.pdb
 D:\ExportApp\obj\Debug\net8.0\ExportApp.genruntimeconfig.cache
 D:\ExportApp\obj\Debug\net8.0\ref\ExportApp.dll
+D:\ExportApp\obj\Debug\net8.0\ExportApp.sourcelink.json
+D:\ExportApp\bin\Debug\net8.0\ClosedXML.dll
+D:\ExportApp\bin\Debug\net8.0\ClosedXML.Parser.dll
+D:\ExportApp\bin\Debug\net8.0\DocumentFormat.OpenXml.dll
+D:\ExportApp\bin\Debug\net8.0\DocumentFormat.OpenXml.Framework.dll
+D:\ExportApp\bin\Debug\net8.0\ExcelNumberFormat.dll
+D:\ExportApp\bin\Debug\net8.0\RBush.dll
+D:\ExportApp\bin\Debug\net8.0\SixLabors.Fonts.dll
+D:\ExportApp\bin\Debug\net8.0\System.IO.Packaging.dll

@@ -1,17 +1,30 @@
-﻿@{
+﻿@model List<DataModel>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Data Export</h1>
-       <ul>
-        <li type="number"></li>
-       </ul>
+    <h2>Data yang akan diekspor:</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Nama</th>
+                <th>Tanggal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Nama</td>
+                    <td>@item.Tanggal.ToString("dd/MM/yyyy")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-    @* <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p> *@
-<h2>Export Data</h2>
-
-<a class="btn btn-success" href="/Export/ExportExcel">Download Excel</a>
-<a class="btn btn-danger" href="/Export/ExportPdf">Download PDF</a>
+    <h2>Export Data</h2>
+    <a class="btn btn-success" href="/Export/ExportExcel">Download Excel</a>
+    <a class="btn btn-danger" href="/Export/ExportPdf">Download PDF</a>
 </div>
- 
