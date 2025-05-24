@@ -1,8 +1,10 @@
+using ExportApp.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+//repository
+builder.Services.AddScoped<IDataRepository, DataRepository>();
 var app = builder.Build();
 Rotativa.AspNetCore.RotativaConfiguration.Setup(app.Environment.WebRootPath, "Rotativa");
 

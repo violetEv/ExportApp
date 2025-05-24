@@ -1,32 +1,24 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ExportApp.Models;
+using ExportApp.Data;
 
 namespace ExportApp.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+        private readonly IDataRepository _repository;
 
-    public HomeController(ILogger<HomeController> logger)
-    {
-        _logger = logger;
-    }
-
-    private List<DataModel> AmbilData()
-    {
-        return new List<DataModel>
+        public HomeController(IDataRepository repository)
         {
-            new DataModel { Nama = "Marry", Tanggal = DateTime.Now },
-            new DataModel { Nama = "Jane", Tanggal = DateTime.Now }
-        };
-    }
+            _repository = repository;
+        }
 
-    public IActionResult Index()
-    {
-        var data = AmbilData();
-        return View(data);
-    }
+        public async Task<IActionResult> Index()
+        {
+            var data = await _repository.GetDataAsync();
+            return View(data);
+        }
     public IActionResult Privacy()
     {
         return View();
